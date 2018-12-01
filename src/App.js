@@ -52,17 +52,30 @@ class Home extends Component {
 	async componentDidMount() {
 		const balance = await this.web3.eth.getBalance(this.walletService.publicKey);		
 		const gameInProgress = await leaderboard.methods.gameInProgress().call();
+		const game = await leaderboard.methods.game().call();
+		const currentBlock = await this.web3.eth.getBlock("latest");
+		const numPlayers = await leaderboard.methods.totalNumPlayers().call();
+		
+		console.log('cb', currentBlock);
+		console.log(numPlayers);
+		
+		const players = [];
+		if (numPlayers > 0) {
+			for (let i=0; i < numPlayers; i++) {
+				const player = await leaderboard.methods.players(i).call();
+				players.push(player);
+			}
+		}
+
 		this.setState({ 
 			gameInProgress,
-			balance: `${this.web3.utils.fromWei(balance)}` 
+			balance: `${this.web3.utils.fromWei(balance)}`,
+			game,
+			players
 		});
 
-		const player = await leaderboard.methods.player(this.walletService.publicKey).call();
-
-		console.log('p', player);
-    
     // watch game progress changes
-    leaderboard.events.allEvents({fromBlock: `0`, toBlock: "latest"}, async (error, result) => {
+    leaderboard.events.allEvents({fromBlock: `${currentBlock.number}`, toBlock: "latest"}, async (error, result) => {
       if(!error) {
         console.log('result', result);
         if (result.event === "UpdateGameProgress") {
@@ -432,8 +445,8 @@ class Home extends Component {
 									<li className="list-group-item">ID: {this.state.game.id}</li>
 									<li className="list-group-item">Player One: {this.state.game.firstPlayer}</li>
 									<li className="list-group-item">Player Two: {this.state.game.secondPlayer}</li>
-									<li className="list-group-item">Bet: {this.state.game.bet}</li>
-									<li className="list-group-item">Pot: {this.state.game.pot}</li>
+									<li className="list-group-item">Bet: {this.web3.utils.fromWei(this.state.game.bet)} ETH</li>
+									<li className="list-group-item">Pot: {this.web3.utils.fromWei(this.state.game.pot)} ETH</li>
 									<li className="list-group-item">P1 Declared Winner: {this.state.game.declaredWinnerFirstPlayer}</li>
 									<li className="list-group-item">P2 Declared Winner: {this.state.game.declaredWinnerSecondPlayer}</li>
 								</ul>
