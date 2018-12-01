@@ -43,8 +43,8 @@ class App extends Component {
       <Router>
         <div className="App">
           <header className="App-header">
-            <p>
-              Playing for ETHs
+            <p className="mb-0">
+              Playing for keETHs
             </p>
           </header>
            
