@@ -102,37 +102,6 @@ class Home extends Component {
       this.setState({ game });
       console.log('game', game);
     }
-<<<<<<< HEAD
-  }
-  
-  handleError(err) {
-    console.error(err);
-  }
-
-  scanQR(){
-
-  }
-
-  render() {
-
-    return (
-      <Router>
-        <div className="App">
-          <header className="App-header">
-            <p className="mb-0">
-              Playing for keETHs
-            </p>
-          </header>
-           
-          {/* <Route path="/:contract" component={Home} /> */}
-          {/* Temp for testing. */}
-          {/* <Route path="/" component={Home} /> */}
-          <Route path="*" component={Home} />
-        </div>
-      </Router>
-    );
-  }
-=======
 	}
 
 	changeBlockchainUI = (type, err) => {
@@ -475,7 +444,6 @@ class Home extends Component {
 			</div>
 		)
 	}
->>>>>>> master
 }
 
 export default Home;
