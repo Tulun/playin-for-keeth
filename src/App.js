@@ -11,6 +11,9 @@ import WalletService from './services/Wallet'
 // Address
 import address from './address';
 
+// Components
+import CreateGame from './components/createGame/CreateGame';
+
 // CSS
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -47,6 +50,9 @@ class Home extends Component {
 		this.walletService = new WalletService();
 
 		this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'));
+
+		// Bindings
+		this.handleOnChangeValue = this.handleOnChangeValue.bind(this);
 	}
 
 	async componentDidMount() {
@@ -313,7 +319,12 @@ class Home extends Component {
 
 	}
 
+	handleOnChangeValue(event) {
+		this.setState({ value: event.target.value })
+	}
+
 	render() {
+		console.log('this.state', this.state);
 		return(
 			<div className="text-center">
 				<ToastContainer  />
@@ -382,20 +393,12 @@ class Home extends Component {
 						<button onClick={() => this.addPlayerToLeaderboard()} className="btn btn-primary">Signup for Leaderboard</button>
 					}
 				</Jumbotron>
-				<Jumbotron>
-					<h2>Create Game</h2>
-					<div className="form-group">
-              <label>Add ETH amount to input if you want to gamble, otherwise just click button</label>
-              <input className="form-control" onChange={(event) => {
-                this.setState({ value: event.target.value })
-              }}
-              value={this.state.value} />
-            </div>
-					{this.state.creatingGame && <p>Transaction pending...</p>}
-					{!this.state.creatingGame && 
-						<button onClick={() => this.createGame()} className="btn btn-primary">Create Game</button>
-					}
-				</Jumbotron>
+				<CreateGame
+					createGame={ () => this.createGame() }
+					creatingGame={ this.state.creatingGame }
+					value={ this.state.value }
+					onChange={ this.handleOnChangeValue }
+				/>
 				<Jumbotron>
 					<h2>Close Game</h2>
 					<div className="form-group">
