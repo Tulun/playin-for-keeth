@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import {Jumbotron} from 'reactstrap';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText} from 'reactstrap';
 import Tx from 'ethereumjs-tx'
 import Web3 from 'web3';
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,6 +9,14 @@ import WalletService from './services/Wallet'
 
 // Address
 import address from './address';
+
+// Components
+import ProgressLight from './components/progressLight/ProgressLight';
+import Leaderboard from './components/leaderboard/Leaderboard';
+import Account from './components/account/Account';
+import InputPlayerName from './components/inputPlayerName/InputPlayerName';
+import PlayerInformation from './components/playerInformation/PlayerInformation';
+import Section from './components/section/Section';
 
 // CSS
 import './App.css';
@@ -41,12 +48,19 @@ class Home extends Component {
 			closingGame: false,
 			closingGameError: false,
 			declaringWinnerCall: false,
-			declaringWinnerCallError: false
+			declaringWinnerCallError: false,
+			viewAccount: false,
+			viewGame: false,
+			viewHome: false,
 		}
+
 		// wallet stuff
 		this.walletService = new WalletService();
-
+		// web 3
 		this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'));
+
+		// Bindings
+		this.handleNameInput = this.handleNameInput.bind(this);
 	}
 
 	async componentDidMount() {
@@ -313,76 +327,47 @@ class Home extends Component {
 
 	}
 
+	handleViewAccount() {
+		this.setState({
+			viewHome: false,
+			viewGame: false,
+			viewAccount: true
+		});
+	}
+
+	handleNameInput(event) {
+    this.setState({name: event.target.value});
+  }
+
 	render() {
 		return(
 			<div className="text-center">
 				<ToastContainer  />
-				<Jumbotron>
-					<h1>Your ETH Wallet Public Key</h1>
-					<p>Fund me to play!</p>
-					<p className="address">{this.walletService.publicKey}</p>
-					{this.state.copied &&
-						<p className="success">Copied to clipboard.</p>
-					}
-          <CopyToClipboard text={this.walletService.publicKey}
-            onCopy={() => this.handlePublicKeyCopy()}>
-            <button className="btn btn-primary">Copy Wallet Address</button>
-          </CopyToClipboard>
-					<p>Balance: {this.state.balance} ETH</p>
-					<h3 className="address">Contract Address: {address}</h3>
-					<h3>Game In Progress: {`${this.state.gameInProgress}`}</h3>
-				</Jumbotron>
-				<Jumbotron>
-					<div className="row">
-						<div className="col-xs-12 col-sm-12 col-md-12">
-							{this.state.players.length ? 
-								<div className='table-responsive'>
-									<table className="Home-table table">
-										<thead className="Home-table-head">
-											<tr className="Home-table-body">
-												<th scope="col">ID</th>
-												<th scope="col">Name</th>
-												<th scope="col">Address</th>
-												<th scope="col">Wins</th>
-												<th scope="col">Losses</th>
-												<th scope="col">Ties</th>
-											</tr>
-										</thead>
-										<tbody className="Home-table-body">
-											{this.state.players.map( (player, index) => {
-												return (
-													<tr className="Home-table-row" key={index}>
-														<th scope="row">{index}</th>
-														<th scope="col">{player.name}</th>
-														<th scope="col">{player.playerAddress}</th>
-														<th scope="col">{player.wins}</th>
-														<th scope="col">{player.losses}</th>
-														<th scope="col">{player.ties}</th>
-													</tr>
-												)
-											})}
-										</tbody>
-									</table>
-								</div>
-							: null }
-						</div>
-					</div>
-				</Jumbotron>
-				<Jumbotron>
-					<h2>Add Player to Leaderboard</h2>
-					<div className="form-group">
-              <label>Input Name:</label>
-              <input className="form-control" onChange={(event) => {
-                this.setState({ name: event.target.value })
-              }}
-              value={this.state.name} />
-            </div>
-					{this.state.addingPlayerToLeaderboard && <p>Transaction pending...</p>}
-					{!this.state.addingPlayerToLeaderboard && 
-						<button onClick={() => this.addPlayerToLeaderboard()} className="btn btn-primary">Signup for Leaderboard</button>
-					}
-				</Jumbotron>
-				<Jumbotron>
+				<ProgressLight gameInProgress={ this.state.gameInProgress } />
+				<Section sectionClass="bg-light">
+					<h1>Playing for Ke[ETH]s</h1>
+					<p>A leaderboard and ETH wagering DApp</p>
+					<Button color="primary" size="lg" className="mb-5" onClick={ () => this.handleViewAccount() }>Get Started</Button>
+					<h3>Leaderboard</h3>
+					<Leaderboard players={ this.state.players } />
+				</Section>
+				<Section>
+					<Account
+						publicKey={ this.walletService.publicKey }
+						copied={ this.state.copied }
+						onCopy={ () => this.handlePublicKeyCopy() }
+						balance={ this.state.balance }
+						contractAddress={ address }
+					/>
+					<InputPlayerName
+						onChange={ this.handleChange }
+						value={ this.state.name }
+						addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
+						addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
+					/>
+					<PlayerInformation />
+				</Section>
+				<Section>
 					<h2>Create Game</h2>
 					<div className="form-group">
               <label>Add ETH amount to input if you want to gamble, otherwise just click button</label>
@@ -395,18 +380,16 @@ class Home extends Component {
 					{!this.state.creatingGame && 
 						<button onClick={() => this.createGame()} className="btn btn-primary">Create Game</button>
 					}
-				</Jumbotron>
-				<Jumbotron>
+				</Section>
+				<Section sectionClass="bg-light">
 					<h2>Close Game</h2>
 					<div className="form-group">
             <label>Ends game immediately. Any bet is returned to user.</label>
           </div>
 					{this.state.closingGame && <p>Transaction pending...</p>}
 					{!this.state.closingGame && <button onClick={() => this.closeGame()} className="btn btn-primary">Close Game</button>}
-				</Jumbotron>
-				<Jumbotron>
-
-				<Jumbotron>
+				</Section>
+				<Section>
 					<h2>Add Second Player to Game</h2>
 					<div className="form-group">
               <label>Add Player Two. Specify Bet Value if game requires it.</label>
@@ -417,8 +400,8 @@ class Home extends Component {
             </div>
 					{this.state.addingSecondPlayerToGame && <p>Transaction pending...</p>}
 					{!this.state.addingSecondPlayerToGame && <button onClick={() => this.addSecondPlayerToGame()} className="btn btn-primary">Add Player Two</button>}
-				</Jumbotron>
-
+				</Section>
+				<Section sectionClass="bg-light">
 					<h2>Choose Winner</h2>
 					<div className="row">
 						<div className="col-xs-12 col-sm-12 col-md-12">
@@ -435,25 +418,23 @@ class Home extends Component {
 					</div>
 					{this.state.declaringWinnerCall && <p>Transaction pending...</p>}
 					{!this.state.declaringWinnerCall && <button onClick={() => this.declareWinner()} className="btn btn-primary">Choose Winner</button>}
-				</Jumbotron>
-				<Jumbotron>
+				</Section>
+				<Section>
 					{this.state.gameInProgress ? 
-						<div className="row">
-							<div className="col-xs-12 col-sm-12 col-md-12">
-								<h2>Current Game</h2>
-								<ul className="list-group">
-									<li className="list-group-item">ID: {this.state.game.id}</li>
-									<li className="list-group-item">Player One: {this.state.game.firstPlayer}</li>
-									<li className="list-group-item">Player Two: {this.state.game.secondPlayer}</li>
-									<li className="list-group-item">Bet: {this.web3.utils.fromWei(this.state.game.bet)} ETH</li>
-									<li className="list-group-item">Pot: {this.web3.utils.fromWei(this.state.game.pot)} ETH</li>
-									<li className="list-group-item">P1 Declared Winner: {this.state.game.declaredWinnerFirstPlayer}</li>
-									<li className="list-group-item">P2 Declared Winner: {this.state.game.declaredWinnerSecondPlayer}</li>
-								</ul>
-							</div>
+						<div>
+							<h2>Current Game</h2>
+							<ul className="list-group">
+								<li className="list-group-item">ID: {this.state.game.id}</li>
+								<li className="list-group-item">Player One: {this.state.game.firstPlayer}</li>
+								<li className="list-group-item">Player Two: {this.state.game.secondPlayer}</li>
+								<li className="list-group-item">Bet: {this.web3.utils.fromWei(this.state.game.bet)} ETH</li>
+								<li className="list-group-item">Pot: {this.web3.utils.fromWei(this.state.game.pot)} ETH</li>
+								<li className="list-group-item">P1 Declared Winner: {this.state.game.declaredWinnerFirstPlayer}</li>
+								<li className="list-group-item">P2 Declared Winner: {this.state.game.declaredWinnerSecondPlayer}</li>
+							</ul>
 						</div>
 					: null}
-				</Jumbotron> 
+				</Section>
 			</div>
 		)
 	}

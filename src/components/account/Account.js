@@ -2,11 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+// Styles
+import './Account.scss';
+
 const propTypes = {
-	gameInProgress: PropTypes.bool.isRequired,
+	contractAddress: PropTypes.string.isRequired,
+	balance: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number
+	]),
+	publicKey: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number
+	]),
+	copied: PropTypes.bool.isRequired,
+	onCopy: PropTypes.func.isRequired,
 }
 
-const Account = ({ address, balance, publicKey, copied, handlePublicKeyCopy }) => (
+const Account = ({ contractAddress, balance, publicKey, copied, onCopy }) => (
 	<div className="Account">
 		<h1 className="h2">Your Account</h1>
 		<div className="Account-balance">
@@ -18,12 +31,12 @@ const Account = ({ address, balance, publicKey, copied, handlePublicKeyCopy }) =
 		{copied && <p className="success">Copied to clipboard.</p>}
 		<CopyToClipboard
 			text={ publicKey }
-			onCopy={ handlePublicKeyCopy }
+			onCopy={ onCopy }
 		>
 			<button className="btn btn-primary">Copy Wallet Address</button>
 		</CopyToClipboard>
 		
-		<h3 className="address">Contract Address: {address}</h3>
+		<h6 className="address">Contract Address: {contractAddress}</h6>
 	</div>
 );
 
