@@ -13,6 +13,8 @@ import address from './address';
 
 // Components
 import CreateGame from './components/createGame/CreateGame';
+import CurrentGame from './components/currentGame/CurrentGame';
+import EndGame from './components/endGame/EndGame';
 
 // CSS
 import './App.css';
@@ -393,21 +395,30 @@ class Home extends Component {
 						<button onClick={() => this.addPlayerToLeaderboard()} className="btn btn-primary">Signup for Leaderboard</button>
 					}
 				</Jumbotron>
-				<CreateGame
-					createGame={ () => this.createGame() }
-					creatingGame={ this.state.creatingGame }
-					value={ this.state.value }
-					onChange={ this.handleOnChangeValue }
-				/>
+
 				<Jumbotron>
-					<h2>Close Game</h2>
-					<div className="form-group">
-            <label>Ends game immediately. Any bet is returned to user.</label>
-          </div>
-					{this.state.closingGame && <p>Transaction pending...</p>}
-					{!this.state.closingGame && <button onClick={() => this.closeGame()} className="btn btn-primary">Close Game</button>}
+					<CreateGame
+						createGame={ () => this.createGame() }
+						creatingGame={ this.state.creatingGame }
+						value={ this.state.value }
+						onChange={ this.handleOnChangeValue }
+					/>
 				</Jumbotron>
+
 				<Jumbotron>
+					<CurrentGame />
+				</Jumbotron>
+
+				<Jumbotron>
+					<EndGame
+						closingGame={this.state.closingGame }
+						closeGame={ () => this.closeGame() }
+						chooseWinner={ this.state.chooseWinner }
+						onChange={ (event) => this.setState({ chooseWinner: event.target.value}) }
+						declaringWinnerCall={ this.state.declaringWinnerCall }
+						declareWinner={ () => this.declareWinner() }
+					/>
+				</Jumbotron>
 
 				<Jumbotron>
 					<h2>Add Second Player to Game</h2>
@@ -422,23 +433,6 @@ class Home extends Component {
 					{!this.state.addingSecondPlayerToGame && <button onClick={() => this.addSecondPlayerToGame()} className="btn btn-primary">Add Player Two</button>}
 				</Jumbotron>
 
-					<h2>Choose Winner</h2>
-					<div className="row">
-						<div className="col-xs-12 col-sm-12 col-md-12">
-							<div className="form-group">
-								<label>Choose Winner</label>
-								<select value={this.state.chooseWinner} onChange={(event) => this.setState({ chooseWinner: event.target.value}) }>
-									<option value="">--Choose Winner--</option>
-									<option value="first">First Player</option>
-									<option value="second">Second Player</option>
-									<option value="tie">Tie</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					{this.state.declaringWinnerCall && <p>Transaction pending...</p>}
-					{!this.state.declaringWinnerCall && <button onClick={() => this.declareWinner()} className="btn btn-primary">Choose Winner</button>}
-				</Jumbotron>
 				<Jumbotron>
 					{this.state.gameInProgress ? 
 						<div className="row">
@@ -456,7 +450,8 @@ class Home extends Component {
 							</div>
 						</div>
 					: null}
-				</Jumbotron> 
+				</Jumbotron>
+
 			</div>
 		)
 	}
