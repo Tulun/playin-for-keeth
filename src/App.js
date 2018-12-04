@@ -250,7 +250,7 @@ class Home extends Component {
 			name: "chooseWinner",
 			type: "function",
 			inputs: [{
-				type: 'string',
+				type: 'uint',
 				name: '_declaredWinner'
 			}]
 		},[this.state.chooseWinner]);
