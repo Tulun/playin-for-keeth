@@ -31,10 +31,10 @@ const EndGame = ({ closingGame, closeGame, chooseWinner, onChange, declaringWinn
 							value={ chooseWinner }
 							onChange={ onChange }
 						>
-							<option value="">--Choose Winner--</option>
-							<option value="first">First Player</option>
-							<option value="second">Second Player</option>
-							<option value="tie">Tie</option>
+							<option value={0}>--Choose Winner--</option>
+							<option value={1}>First Player</option>
+							<option value={2}>Second Player</option>
+							<option value={3}>Tie</option>
 						</Input>
 						{declaringWinnerCall && <p>Transaction pending...</p>}
 						{!declaringWinnerCall && <button onClick={ declareWinner } className="btn btn-primary">Choose Winner</button>}
