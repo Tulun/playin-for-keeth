@@ -15,6 +15,7 @@ import address from './address';
 import CreateGame from './components/createGame/CreateGame';
 import CurrentGame from './components/currentGame/CurrentGame';
 import EndGame from './components/endGame/EndGame';
+import JoinGame from './components/JoinGame/JoinGame';
 
 // CSS
 import './App.css';
@@ -419,7 +420,7 @@ class Home extends Component {
 						declareWinner={ () => this.declareWinner() }
 					/>
 				</Jumbotron>
-
+				<JoinGame />
 				<Jumbotron>
 					<h2>Add Second Player to Game</h2>
 					<div className="form-group">
