@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText} from 'reactstrap';
+import {Jumbotron, Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText} from 'reactstrap';
 import Tx from 'ethereumjs-tx'
 import Web3 from 'web3';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,6 +17,9 @@ import Account from './components/account/Account';
 import InputPlayerName from './components/inputPlayerName/InputPlayerName';
 import PlayerInformation from './components/playerInformation/PlayerInformation';
 import Section from './components/section/Section';
+import CreateGame from './components/createGame/CreateGame';
+import CurrentGame from './components/currentGame/CurrentGame';
+import EndGame from './components/endGame/EndGame';
 
 // CSS
 import './App.css';
@@ -61,6 +64,7 @@ class Home extends Component {
 
 		// Bindings
 		this.handleNameInput = this.handleNameInput.bind(this);
+		this.handleOnChangeValue = this.handleOnChangeValue.bind(this);
 	}
 
 	async componentDidMount() {
@@ -256,7 +260,7 @@ class Home extends Component {
 			name: "chooseWinner",
 			type: "function",
 			inputs: [{
-				type: 'string',
+				type: 'uint',
 				name: '_declaredWinner'
 			}]
 		},[this.state.chooseWinner]);
@@ -339,7 +343,12 @@ class Home extends Component {
     this.setState({name: event.target.value});
   }
 
+	handleOnChangeValue(event) {
+		this.setState({ value: event.target.value })
+	}
+
 	render() {
+		console.log('this.state', this.state);
 		return(
 			<div className="text-center">
 				<ToastContainer  />
@@ -367,28 +376,31 @@ class Home extends Component {
 					/>
 					<PlayerInformation />
 				</Section>
-				<Section>
-					<h2>Create Game</h2>
-					<div className="form-group">
-              <label>Add ETH amount to input if you want to gamble, otherwise just click button</label>
-              <input className="form-control" onChange={(event) => {
-                this.setState({ value: event.target.value })
-              }}
-              value={this.state.value} />
-            </div>
-					{this.state.creatingGame && <p>Transaction pending...</p>}
-					{!this.state.creatingGame && 
-						<button onClick={() => this.createGame()} className="btn btn-primary">Create Game</button>
-					}
-				</Section>
+				
 				<Section sectionClass="bg-light">
-					<h2>Close Game</h2>
-					<div className="form-group">
-            <label>Ends game immediately. Any bet is returned to user.</label>
-          </div>
-					{this.state.closingGame && <p>Transaction pending...</p>}
-					{!this.state.closingGame && <button onClick={() => this.closeGame()} className="btn btn-primary">Close Game</button>}
+					<CreateGame
+						createGame={ () => this.createGame() }
+						creatingGame={ this.state.creatingGame }
+						value={ this.state.value }
+						onChange={ this.handleOnChangeValue }
+					/>
 				</Section>
+
+				<Section>
+					<CurrentGame />
+				</Section>
+
+				<Section sectionClass="bg-light">
+					<EndGame
+						closingGame={this.state.closingGame }
+						closeGame={ () => this.closeGame() }
+						chooseWinner={ this.state.chooseWinner }
+						onChange={ (event) => this.setState({ chooseWinner: event.target.value}) }
+						declaringWinnerCall={ this.state.declaringWinnerCall }
+						declareWinner={ () => this.declareWinner() }
+					/>
+				</Section>
+
 				<Section>
 					<h2>Add Second Player to Game</h2>
 					<div className="form-group">
@@ -401,25 +413,8 @@ class Home extends Component {
 					{this.state.addingSecondPlayerToGame && <p>Transaction pending...</p>}
 					{!this.state.addingSecondPlayerToGame && <button onClick={() => this.addSecondPlayerToGame()} className="btn btn-primary">Add Player Two</button>}
 				</Section>
+
 				<Section sectionClass="bg-light">
-					<h2>Choose Winner</h2>
-					<div className="row">
-						<div className="col-xs-12 col-sm-12 col-md-12">
-							<div className="form-group">
-								<label>Choose Winner</label>
-								<select value={this.state.chooseWinner} onChange={(event) => this.setState({ chooseWinner: event.target.value}) }>
-									<option value="">--Choose Winner--</option>
-									<option value="first">First Player</option>
-									<option value="second">Second Player</option>
-									<option value="tie">Tie</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					{this.state.declaringWinnerCall && <p>Transaction pending...</p>}
-					{!this.state.declaringWinnerCall && <button onClick={() => this.declareWinner()} className="btn btn-primary">Choose Winner</button>}
-				</Section>
-				<Section>
 					{this.state.gameInProgress ? 
 						<div>
 							<h2>Current Game</h2>
