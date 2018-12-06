@@ -20,6 +20,7 @@ import Section from './components/section/Section';
 import CreateGame from './components/createGame/CreateGame';
 import CurrentGame from './components/currentGame/CurrentGame';
 import EndGame from './components/endGame/EndGame';
+import JoinGame from './components/JoinGame/JoinGame';
 
 // CSS
 import './App.css';
