@@ -90,11 +90,27 @@ class Home extends Component {
 			}
 		}
 
+		// Determine player info.
+		let initialPlayer = {
+			name: "",
+			rank: 0,
+			wins: 0,
+			losses: 0,
+			ties: 0,
+		};
+
+		initialPlayers.map( pl => {
+			if (pl.playerAddress.toLowerCase() === this.walletService.publicKey.toLowerCase()) {
+				initialPlayer = pl;
+			}
+		});
+
 		this.setState({ 
 			gameInProgress,
 			balance: `${this.web3.utils.fromWei(balance)}`,
 			game,
-			players: initialPlayers
+			players: initialPlayers,
+			player: initialPlayer
 		});
 
     // watch game progress changes
@@ -114,7 +130,8 @@ class Home extends Component {
           const player = await leaderboard.methods.players(parseInt(result.returnValues[0])).call();
           players[parseInt(result.returnValues[0])] = player;
 					console.log('in result', players);
-          return this.setState({ players });
+
+          return this.setState({ players, player });
 				}
 				
 				if (result.event === "GameUpdated") {
@@ -171,8 +188,6 @@ class Home extends Component {
 			from: this.walletService.publicKey,
 			data: nameHexcode
 		};
-
-		console.log('txDAta', txData);
 
 		const tx = await this.sendTransaction(txCount, txData);
 		if (tx.name === "Error") {
@@ -370,9 +385,7 @@ class Home extends Component {
 
 	}
 
-	render() {
-		console.log('this.state', this.state.players);
-		
+	render() {		
 		let pot = '';
 		if(this.state.game.pot) {
 			console.log('pot', this.web3.utils.fromWei(this.state.game.pot));	
@@ -422,7 +435,7 @@ class Home extends Component {
 							createGame={ () => this.createGame() }
 							creatingGame={ this.state.creatingGame }
 							value={ this.state.value }
-							onChange={ this.handleOnChangeValue }
+							handleInputChange={ this.handleInputChange }
 						/>
 					</div>
 				}

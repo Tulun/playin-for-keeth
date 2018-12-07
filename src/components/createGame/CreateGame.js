@@ -9,7 +9,7 @@ const propTypes = {
 	value: PropTypes.string.isRequired,
 };
 
-const CreateGame = ({ creatingGame, createGame, onChange, value }) => (
+const CreateGame = ({ creatingGame, createGame, handleInputChange, value }) => (
 	<div className="CreateGame">
 		<h2>Create Game</h2>
 		<p>Play for Free(minus network fees) or back yourself with an ETH amount</p>
@@ -30,7 +30,7 @@ const CreateGame = ({ creatingGame, createGame, onChange, value }) => (
 								name="betAmount"
 								id="betAmount"
 								placeholder="0.25"
-								onChange={ onChange }
+								onChange={(event, state) => handleInputChange(event, "betValue") }
 								value={ value }
 							/>
 						</FormGroup>

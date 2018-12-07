@@ -24,25 +24,29 @@ const defaultProps = {
   }
 }
 
-const PlayerInformation = ({ player, handleInputChange, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => (
-  <div className="PlayerInformation pt-5">
-    <h3>Player Information</h3>
-    <ListGroup flush>
-      <ListGroupItem>
-        <InputPlayerName
-          handleInputChange={ handleInputChange }
-          value={ name }
-          addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
-          addPlayerToLeaderboard={ addPlayerToLeaderboard }
-        />
-      </ListGroupItem>
-      <ListGroupItem>Rank: {player.rank}</ListGroupItem>
-      <ListGroupItem>Wins: {player.wins}</ListGroupItem>
-      <ListGroupItem>Losses: {player.losses}</ListGroupItem>
-      <ListGroupItem>Ties: {player.ties}</ListGroupItem>
-    </ListGroup>
-  </div>
-);
+const PlayerInformation = ({ player, handleInputChange, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => {
+  console.log('p', player);
+  return ( 
+    <div className="PlayerInformation pt-5">
+      <h3>Player Information</h3>
+      <ListGroup flush>
+        {player.name === "" &&
+          <ListGroupItem>
+            <InputPlayerName
+              handleInputChange={ handleInputChange }
+              value={ name }
+              addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
+              addPlayerToLeaderboard={ addPlayerToLeaderboard } /> 
+          </ListGroupItem>
+        }
+        <ListGroupItem>Rank: {player.rank}</ListGroupItem>
+        <ListGroupItem>Wins: {player.wins}</ListGroupItem>
+        <ListGroupItem>Losses: {player.losses}</ListGroupItem>
+        <ListGroupItem>Ties: {player.ties}</ListGroupItem>
+      </ListGroup>
+    </div>
+  )
+}
 
 PlayerInformation.propTypes = propTypes;
 PlayerInformation.defaultProps = defaultProps;
