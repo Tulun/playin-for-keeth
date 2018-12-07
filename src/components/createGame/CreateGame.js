@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
 	creatingGame: PropTypes.bool.isRequired,
 	createGame: PropTypes.func.isRequired,
-	onChange: PropTypes.func.isRequired,
+	handleInputChange: PropTypes.func.isRequired,
 	value: PropTypes.string.isRequired,
 };
 
