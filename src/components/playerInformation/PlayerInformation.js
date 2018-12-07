@@ -24,13 +24,13 @@ const defaultProps = {
   }
 }
 
-const PlayerInformation = ({ player, handleNameInput, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => (
+const PlayerInformation = ({ player, handleInputChange, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => (
   <div className="PlayerInformation pt-5">
     <h3>Player Information</h3>
     <ListGroup flush>
       <ListGroupItem>
         <InputPlayerName
-          onChange={ handleNameInput }
+          handleInputChange={ handleInputChange }
           value={ name }
           addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
           addPlayerToLeaderboard={ addPlayerToLeaderboard }

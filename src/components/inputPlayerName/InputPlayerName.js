@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 
-const InputPlayerName = ({ name, addingPlayerToLeaderboard, addPlayerToLeaderboard, onChange }) => (
+const InputPlayerName = ({ name, addingPlayerToLeaderboard, addPlayerToLeaderboard, handleInputChange }) => (
   <div className="InputPlayerName d-flex justify-content-center">
       { addingPlayerToLeaderboard && <p>Transaction pending...</p> }
       { !addingPlayerToLeaderboard && 
@@ -14,7 +14,7 @@ const InputPlayerName = ({ name, addingPlayerToLeaderboard, addPlayerToLeaderboa
               name="name"
               id="playerName"
               placeholder="Player Name"
-              onChange={ onChange }
+              onChange={ (event, state) => handleInputChange(event, "name") }
               value={ name }
             />
           </FormGroup>

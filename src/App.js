@@ -70,11 +70,6 @@ class Home extends Component {
 		this.walletService = new WalletService();
 		// web 3
 		this.web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'));
-
-		// Bindings
-		this.handleNameInput = this.handleNameInput.bind(this);
-		this.handleOnChangeValue = this.handleOnChangeValue.bind(this);
-		this.toggle = this.toggle.bind(this);
 	}
 
 	async componentDidMount() {
@@ -87,11 +82,11 @@ class Home extends Component {
 		console.log('cb', currentBlock);
 		console.log(numPlayers);
 		
-		const players = [];
+		const initialPlayers = [];
 		if (numPlayers > 0) {
 			for (let i=0; i < numPlayers; i++) {
 				const player = await leaderboard.methods.players(i).call();
-				players.push(player);
+				initialPlayers.push(player);
 			}
 		}
 
@@ -99,7 +94,7 @@ class Home extends Component {
 			gameInProgress,
 			balance: `${this.web3.utils.fromWei(balance)}`,
 			game,
-			players
+			players: initialPlayers
 		});
 
     // watch game progress changes
@@ -116,9 +111,9 @@ class Home extends Component {
 
         if (result.event === "PlayerUpdated") {
           const players = this.state.players;
-          const player = await leaderboard.methods.players(result.returnValues[0]).call();
-          players[result.returnValues[0]] = player;
-
+          const player = await leaderboard.methods.players(parseInt(result.returnValues[0])).call();
+          players[parseInt(result.returnValues[0])] = player;
+					console.log('in result', players);
           return this.setState({ players });
 				}
 				
@@ -162,8 +157,10 @@ class Home extends Component {
 				type: 'string',
 				name: 'name'
 			}]
-		},[this.state.player.name]);
+		},[this.state.name]);
 
+		console.log('name', this.state.name)
+		
 		const txCount = await this.web3.eth.getTransactionCount(this.walletService.publicKey);
 		// construct the transaction data
 		const txData = {
@@ -174,6 +171,8 @@ class Home extends Component {
 			from: this.walletService.publicKey,
 			data: nameHexcode
 		};
+
+		console.log('txDAta', txData);
 
 		const tx = await this.sendTransaction(txCount, txData);
 		if (tx.name === "Error") {
@@ -341,21 +340,17 @@ class Home extends Component {
 
 	}
 
-	handleNameInput(event) {
-    this.setState({name: event.target.value});
+	handleInputChange = (event, state) => {
+    this.setState({[state]: event.target.value});
   }
 
-	handleOnChangeValue(event) {
-		this.setState({ value: event.target.value })
-	}
-
-	toggle() {
+	toggle = () => {
     this.setState({
       tooltipOpen: !this.state.tooltipOpen
     });
 	}
 	
-	handleViewPage(page) {
+	handleViewPage = (page) => {
 
 		if (page === 'account') {
 			this.setState({
@@ -376,7 +371,7 @@ class Home extends Component {
 	}
 
 	render() {
-		console.log('this.state', this.state);
+		console.log('this.state', this.state.players);
 		
 		let pot = '';
 		if(this.state.game.pot) {
@@ -412,7 +407,7 @@ class Home extends Component {
 						/>
 						<PlayerInformation
 							player={ this.state.player }
-							onChange={ this.handleNameInput }
+							handleInputChange={ this.handleInputChange }
 							value={ this.state.name }
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
