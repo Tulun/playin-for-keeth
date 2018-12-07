@@ -366,21 +366,23 @@ class Home extends Component {
 	}
 	
 	handleViewPage = (page) => {
-
-		if (page === 'account') {
-			this.setState({
-				viewHome: false,
-				viewAccount: true,
-				viewGame: false,
-			});
-		}
-
-		if (page === 'createGame') {
-			this.setState({
-				viewHome: false,
-				viewAccount: false,
-				viewCreateGame: true,
-			});
+		switch(page) {
+			case "account": 
+				this.setState({
+					viewHome: false,
+					viewAccount: true,
+					viewGame: false,
+				});
+				break;
+			case "createGame":
+				this.setState({
+					viewHome: false,
+					viewAccount: false,
+					viewCreateGame: true,
+				});
+				break;
+			default:
+				return null;
 		}
 
 	}
@@ -419,6 +421,7 @@ class Home extends Component {
 							toggle={ this.toggle }
 						/>
 						<PlayerInformation
+							handleViewPage={this.handleViewPage}
 							player={ this.state.player }
 							handleInputChange={ this.handleInputChange }
 							value={ this.state.name }

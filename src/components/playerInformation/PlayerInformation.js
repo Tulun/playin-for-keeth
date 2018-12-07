@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import InputPlayerName from '../inputPlayerName/InputPlayerName';
@@ -24,29 +24,34 @@ const defaultProps = {
   }
 }
 
-const PlayerInformation = ({ player, handleInputChange, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => {
-  console.log('p', player);
-  return ( 
-    <div className="PlayerInformation pt-5">
-      <h3>Player Information</h3>
-      <ListGroup flush>
-        {player.name === "" &&
-          <ListGroupItem>
-            <InputPlayerName
-              handleInputChange={ handleInputChange }
-              value={ name }
-              addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
-              addPlayerToLeaderboard={ addPlayerToLeaderboard } /> 
-          </ListGroupItem>
-        }
-        <ListGroupItem>Rank: {player.rank}</ListGroupItem>
-        <ListGroupItem>Wins: {player.wins}</ListGroupItem>
-        <ListGroupItem>Losses: {player.losses}</ListGroupItem>
-        <ListGroupItem>Ties: {player.ties}</ListGroupItem>
-      </ListGroup>
-    </div>
-  )
-}
+const PlayerInformation = ({ player, handleInputChange, handleViewPage, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => ( 
+  <div className="PlayerInformation pt-5">
+    <h3>Player Information</h3>
+    <ListGroup flush>
+      {player.name === "" &&
+        <ListGroupItem>
+          <InputPlayerName
+            handleInputChange={ handleInputChange }
+            value={ name }
+            addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
+            addPlayerToLeaderboard={ addPlayerToLeaderboard } /> 
+        </ListGroupItem>
+      }
+      {player.name !== "" && 
+        <Button 
+          className="btn btn-primary"
+          onClick={() => handleViewPage("createGame")}>
+            Create Game
+        </Button>
+      }
+      <ListGroupItem>Rank: {player.rank}</ListGroupItem>
+      <ListGroupItem>Wins: {player.wins}</ListGroupItem>
+      <ListGroupItem>Losses: {player.losses}</ListGroupItem>
+      <ListGroupItem>Ties: {player.ties}</ListGroupItem>
+    </ListGroup>
+  </div>
+)
+
 
 PlayerInformation.propTypes = propTypes;
 PlayerInformation.defaultProps = defaultProps;
