@@ -2,6 +2,8 @@ import React from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 
+import InputPlayerName from '../inputPlayerName/InputPlayerName';
+
 const propTypes = {
   player: PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -22,11 +24,18 @@ const defaultProps = {
   }
 }
 
-const PlayerInformation = ({ player }) => (
-  <div className="PlayerInformation">
+const PlayerInformation = ({ player, handleNameInput, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => (
+  <div className="PlayerInformation pt-5">
     <h3>Player Information</h3>
     <ListGroup flush>
-      <ListGroupItem>Name: {player.name}</ListGroupItem>
+      <ListGroupItem>
+        <InputPlayerName
+          onChange={ handleNameInput }
+          value={ name }
+          addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
+          addPlayerToLeaderboard={ addPlayerToLeaderboard }
+        />
+      </ListGroupItem>
       <ListGroupItem>Rank: {player.rank}</ListGroupItem>
       <ListGroupItem>Wins: {player.wins}</ListGroupItem>
       <ListGroupItem>Losses: {player.losses}</ListGroupItem>

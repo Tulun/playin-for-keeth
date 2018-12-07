@@ -1,16 +1,17 @@
 import React from 'react';
-import { Button, Container, Row, Col, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 const propTypes = {
+	
 };
 
-const JoinGame = ({ }) => (
+const JoinGame = ({ addSecondPlayerToGame }) => (
 	<div className="JoinGame">
 		<h2>Join the Game</h2>
 		<p>Join the current game created by [Player 1] by confirming the bet amount of [0.5eth]</p>
 		<h2 className="display-1">0.5 <span className="h6">ETH</span></h2>
-		<Button color="primary">Confirm and Join Game</Button>
+		<Button color="primary" onClick={ addSecondPlayerToGame }>Confirm and Join Game</Button>
 	</div>
 );
 

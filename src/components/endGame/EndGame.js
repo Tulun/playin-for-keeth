@@ -21,24 +21,26 @@ const EndGame = ({ closingGame, closeGame, chooseWinner, onChange, declaringWinn
 				<Col xs="12" md="1"><h5>OR</h5></Col>
 				<Col xs="12" md="5">
 					<h2>Choose Winner</h2>
-					<FormGroup>
-						<Label for="selectWinner">Choose Winner</Label>
-						<Input
-							type="select"
-							name="selectMulti"
-							id="selectWinner"
-							// multiple
-							value={ chooseWinner }
-							onChange={ onChange }
-						>
-							<option value={0}>--Choose Winner--</option>
-							<option value={1}>First Player</option>
-							<option value={2}>Second Player</option>
-							<option value={3}>Tie</option>
-						</Input>
-						{declaringWinnerCall && <p>Transaction pending...</p>}
-						{!declaringWinnerCall && <button onClick={ declareWinner } className="btn btn-primary">Choose Winner</button>}
-					</FormGroup>
+					<Form	>
+						<FormGroup>
+							<Label for="selectWinner">Choose Winner</Label>
+							<Input
+								type="select"
+								name="selectMulti"
+								id="selectWinner"
+								// multiple
+								value={ chooseWinner }
+								onChange={ onChange }
+							>
+								<option value={0}>--Choose Winner--</option>
+								<option value={1}>First Player</option>
+								<option value={2}>Second Player</option>
+								<option value={3}>Tie</option>
+							</Input>
+							{declaringWinnerCall && <p>Transaction pending...</p>}
+							{!declaringWinnerCall && <button onClick={ declareWinner } className="btn btn-primary">Choose Winner</button>}
+						</FormGroup>
+					</Form>
 				</Col>
 			</Row>
 		</Container>

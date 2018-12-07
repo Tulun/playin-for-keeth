@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Table} from 'reactstrap';
+import { Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 // Proptypes

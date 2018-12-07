@@ -14,7 +14,6 @@ import address from './address';
 import ProgressLight from './components/progressLight/ProgressLight';
 import Leaderboard from './components/leaderboard/Leaderboard';
 import Account from './components/account/Account';
-import InputPlayerName from './components/inputPlayerName/InputPlayerName';
 import PlayerInformation from './components/playerInformation/PlayerInformation';
 import Section from './components/section/Section';
 import CreateGame from './components/createGame/CreateGame';
@@ -37,7 +36,13 @@ class Home extends Component {
 			players: [],
 			gameInProgress: false,
 			game: {},
-			name: "",
+			player: {
+				name: "",
+				rank: 0,
+				wins: 0,
+				losses: 0,
+				ties: 0,
+			},
 			balance: 0,
 			betValue: "",
 			value: "",
@@ -53,9 +58,12 @@ class Home extends Component {
 			closingGameError: false,
 			declaringWinnerCall: false,
 			declaringWinnerCallError: false,
+			viewHome: true,
 			viewAccount: false,
-			viewGame: false,
-			viewHome: false,
+			viewCreateGame: false,
+			viewCurrentGame: false,
+			viewEndGame: false,
+			tooltipOpen: false,
 		}
 
 		// wallet stuff
@@ -66,6 +74,7 @@ class Home extends Component {
 		// Bindings
 		this.handleNameInput = this.handleNameInput.bind(this);
 		this.handleOnChangeValue = this.handleOnChangeValue.bind(this);
+		this.toggle = this.toggle.bind(this);
 	}
 
 	async componentDidMount() {
@@ -153,7 +162,7 @@ class Home extends Component {
 				type: 'string',
 				name: 'name'
 			}]
-		},[this.state.name]);
+		},[this.state.player.name]);
 
 		const txCount = await this.web3.eth.getTransactionCount(this.walletService.publicKey);
 		// construct the transaction data
@@ -332,14 +341,6 @@ class Home extends Component {
 
 	}
 
-	handleViewAccount() {
-		this.setState({
-			viewHome: false,
-			viewGame: false,
-			viewAccount: true
-		});
-	}
-
 	handleNameInput(event) {
     this.setState({name: event.target.value});
   }
@@ -348,89 +349,119 @@ class Home extends Component {
 		this.setState({ value: event.target.value })
 	}
 
+	toggle() {
+    this.setState({
+      tooltipOpen: !this.state.tooltipOpen
+    });
+	}
+	
+	handleViewPage(page) {
+
+		if (page === 'account') {
+			this.setState({
+				viewHome: false,
+				viewAccount: true,
+				viewGame: false,
+			});
+		}
+
+		if (page === 'createGame') {
+			this.setState({
+				viewHome: false,
+				viewAccount: false,
+				viewCreateGame: true,
+			});
+		}
+
+	}
+
 	render() {
 		console.log('this.state', this.state);
+		
+		let pot = '';
+		if(this.state.game.pot) {
+			console.log('pot', this.web3.utils.fromWei(this.state.game.pot));	
+		}
+
 		return(
-			<div className="text-center">
+			<div className="container text-center py-5">
+				
 				<ToastContainer  />
 				<ProgressLight gameInProgress={ this.state.gameInProgress } />
-				<Section sectionClass="bg-light">
-					<h1>Playing for Ke[ETH]s</h1>
-					<p>A leaderboard and ETH wagering DApp</p>
-					<Button color="primary" size="lg" className="mb-5" onClick={ () => this.handleViewAccount() }>Get Started</Button>
-					<h3>Leaderboard</h3>
-					<Leaderboard players={ this.state.players } />
-				</Section>
-				<Section>
-					<Account
-						publicKey={ this.walletService.publicKey }
-						copied={ this.state.copied }
-						onCopy={ () => this.handlePublicKeyCopy() }
-						balance={ this.state.balance }
-						contractAddress={ address }
-					/>
-					<InputPlayerName
-						onChange={ this.handleChange }
-						value={ this.state.name }
-						addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
-						addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
-					/>
-					<PlayerInformation />
-				</Section>
+
+				{ this.state.viewHome && 
+					<div className="Home">
+						<h1>Playing for Ke[ETH]s</h1>
+						<p>A leaderboard and ETH wagering DApp</p>
+						<Button color="primary" size="lg" className="mb-5" onClick={ () => this.handleViewPage('account') }>Get Started</Button>
+						<h3>Leaderboard</h3>
+						<Leaderboard players={ this.state.players } />
+					</div>
+				}
+
+				{ this.state.viewAccount &&
+					<div className="Account">
+						<Account
+							publicKey={ this.walletService.publicKey }
+							copied={ this.state.copied }
+							onCopy={ () => this.handlePublicKeyCopy() }
+							balance={ this.state.balance }
+							contractAddress={ address }
+							tooltipOpen={ this.state.tooltipOpen}
+							toggle={ this.toggle }
+						/>
+						<PlayerInformation
+							player={ this.state.player }
+							onChange={ this.handleNameInput }
+							value={ this.state.name }
+							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
+							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
+						/>
+						<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
+					</div>
+				}
 				
-				<Section sectionClass="bg-light">
-					<CreateGame
-						createGame={ () => this.createGame() }
-						creatingGame={ this.state.creatingGame }
-						value={ this.state.value }
-						onChange={ this.handleOnChangeValue }
-					/>
-				</Section>
+				{ this.state.viewCreateGame &&
+					<div className="CreateGame">
+						<CreateGame
+							createGame={ () => this.createGame() }
+							creatingGame={ this.state.creatingGame }
+							value={ this.state.value }
+							onChange={ this.handleOnChangeValue }
+						/>
+					</div>
+				}
+				
+				{ this.state.viewCurrentGame &&
+					<Section>
+						<CurrentGame
+							// endGame={}
+							game={this.state.game}
+							gameInProgress={this.state.gameInProgress}
+							pot={pot}
+						/>
+					</Section>
+				}
 
-				<Section>
-					<CurrentGame />
-				</Section>
+				{ this.state.viewEndGame &&
+					<Section sectionClass="bg-light">
+						<EndGame
+							closingGame={this.state.closingGame }
+							closeGame={ () => this.closeGame() }
+							chooseWinner={ this.state.chooseWinner }
+							onChange={ (event) => this.setState({ chooseWinner: event.target.value}) }
+							declaringWinnerCall={ this.state.declaringWinnerCall }
+							declareWinner={ () => this.declareWinner() }
+						/>
+					</Section>
+				}
 
-				<Section sectionClass="bg-light">
-					<EndGame
-						closingGame={this.state.closingGame }
-						closeGame={ () => this.closeGame() }
-						chooseWinner={ this.state.chooseWinner }
-						onChange={ (event) => this.setState({ chooseWinner: event.target.value}) }
-						declaringWinnerCall={ this.state.declaringWinnerCall }
-						declareWinner={ () => this.declareWinner() }
-					/>
-				</Section>
+				{ this.state.viewJoinGame &&
+					<Section>
+						<JoinGame addSecondPlayerToGame={ () => this.addSecondPlayerToGame() } />
+					</Section>
+				}
 
-				<Section>
-					<h2>Add Second Player to Game</h2>
-					<div className="form-group">
-              <label>Add Player Two. Specify Bet Value if game requires it.</label>
-              <input className="form-control" onChange={(event) => {
-                this.setState({ betValue: event.target.value })
-              }}
-              value={this.state.betValue} />
-            </div>
-					{this.state.addingSecondPlayerToGame && <p>Transaction pending...</p>}
-					{!this.state.addingSecondPlayerToGame && <button onClick={() => this.addSecondPlayerToGame()} className="btn btn-primary">Add Player Two</button>}
-				</Section>
-
-				<Section sectionClass="bg-light">
-					{this.state.gameInProgress ? 
-						<div>
-							<h2>Current Game</h2>
-							<ul className="list-group">
-								<li className="list-group-item">ID: {this.state.game.id}</li>
-								<li className="list-group-item">Player One: {this.state.game.firstPlayer}</li>
-								<li className="list-group-item">Player Two: {this.state.game.secondPlayer}</li>
-								<li className="list-group-item">Bet: {this.web3.utils.fromWei(this.state.game.bet)} ETH</li>
-								<li className="list-group-item">Pot: {this.web3.utils.fromWei(this.state.game.pot)} ETH</li>
-								<li className="list-group-item">P1 Declared Winner: {this.state.game.declaredWinnerFirstPlayer}</li>
-								<li className="list-group-item">P2 Declared Winner: {this.state.game.declaredWinnerSecondPlayer}</li>
-							</ul>
-						</div>
-					: null}
-				</Section>
 			</div>
 		)
 	}
