@@ -368,6 +368,13 @@ class Home extends Component {
 	
 	handleViewPage = (page) => {
 		switch(page) {
+			case "home" :
+				this.setState({
+					viewHome: true,
+					viewAccount: false,
+					viewGame: false,
+				});
+				break;
 			case "account": 
 				this.setState({
 					viewHome: false,
@@ -396,7 +403,7 @@ class Home extends Component {
 
 		return(
 			<div className="container text-center py-5">
-				<Navbar />
+				<Navbar handleViewPage={this.handleViewPage} />
 				<ToastContainer  />
 				<ProgressLight gameInProgress={ this.state.gameInProgress } />
 

@@ -24,16 +24,16 @@ class NavbarComponent extends Component {
 
   render() {
     return (
-      <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">Playing For Ke[ETH]s</NavbarBrand>
+      <Navbar className="NavbarComponent" color="light" light expand="md">
+        <NavbarBrand onClick={() => this.props.handleViewPage("home")}>Playing For Ke[ETH]s</NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <p className="nav-link">Account</p>
+              <p onClick={() => this.props.handleViewPage("account")} className="nav-link">Account</p>
             </NavItem>
             <NavItem>
-              <p className="nav-link">Create Game</p>
+              <p onClick={() => this.props.handleViewPage("createGame")} className="nav-link">Create Game</p>
             </NavItem>
           </Nav>
         </Collapse>
