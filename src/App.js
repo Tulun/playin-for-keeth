@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Jumbotron, Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText} from 'reactstrap';
+import {Button} from 'reactstrap';
 import Tx from 'ethereumjs-tx'
 import Web3 from 'web3';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,6 +20,7 @@ import CreateGame from './components/createGame/CreateGame';
 import CurrentGame from './components/currentGame/CurrentGame';
 import EndGame from './components/endGame/EndGame';
 import JoinGame from './components/JoinGame/JoinGame';
+import Navbar from "./components/navbar/Navbar";
 
 // CSS
 import './App.css';
@@ -395,7 +396,7 @@ class Home extends Component {
 
 		return(
 			<div className="container text-center py-5">
-				
+				<Navbar />
 				<ToastContainer  />
 				<ProgressLight gameInProgress={ this.state.gameInProgress } />
 
