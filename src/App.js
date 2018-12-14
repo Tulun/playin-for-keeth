@@ -469,14 +469,10 @@ class Home extends Component {
 	render() {		
 		let pot = '';
 		if(this.state.game.pot) {
-			console.log('pot', this.web3.utils.fromWei(this.state.game.pot));	
+			pot = this.web3.utils.fromWei(this.state.game.pot);
 		}
 
-		console.log(this.state)
-
-		console.log(this.state.chooseWinner)
-
-		return(
+		return (
 			<div className="container text-center py-5">
 				<Navbar handleViewPage={this.handleViewPage} />
 				<ToastContainer  />
@@ -530,6 +526,7 @@ class Home extends Component {
 							name={ this.state.name }
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
+							players={this.state.players}
 						/>
 					</div>
 				}

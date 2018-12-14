@@ -15,7 +15,6 @@ const propTypes = {
 
 const Leaderboard = ({ players }) => {
   const sortedPlayers = players.sort( (a, b) => b.wins - a.wins || a.losses - b.losses );
-  console.log('sp', sortedPlayers);
   return (
     <div className="Leaderboard">
       { sortedPlayers.length ? 
