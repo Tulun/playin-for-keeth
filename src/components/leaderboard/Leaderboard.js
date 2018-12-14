@@ -28,6 +28,7 @@ const Leaderboard = ({ players }) => {
               <th scope="col">Wins</th>
               <th scope="col">Losses</th>
               <th scope="col">Ties</th>
+              <th scope="col">Rank</th>
             </tr>
           </thead>
           <tbody>
@@ -40,6 +41,7 @@ const Leaderboard = ({ players }) => {
                   <td>{player.wins}</td>
                   <td>{player.losses}</td>
                   <td>{player.ties}</td>
+                  <td>{index + 1}</td>
                 </tr>
               )
             })}
