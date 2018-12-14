@@ -373,6 +373,8 @@ class Home extends Component {
 					viewHome: true,
 					viewAccount: false,
 					viewGame: false,
+					viewCurrentGame: false,
+					viewEndGame: false,
 				});
 				break;
 			case "account": 
@@ -380,6 +382,8 @@ class Home extends Component {
 					viewHome: false,
 					viewAccount: true,
 					viewGame: false,
+					viewCurrentGame: false,
+					viewEndGame: false,
 				});
 				break;
 			case "createGame":
@@ -387,6 +391,26 @@ class Home extends Component {
 					viewHome: false,
 					viewAccount: false,
 					viewCreateGame: true,
+					viewCurrentGame: false,
+					viewEndGame: false,
+				});
+				break;
+			case "viewCurrentGame":
+				this.setState({
+					viewHome: false,
+					viewAccount: false,
+					viewCreateGame: false,
+					viewCurrentGame: true,
+					viewEndGame: false,
+				});
+				break;
+			case "viewEndGame":
+				this.setState({
+					viewHome: false,
+					viewAccount: false,
+					viewCreateGame: false,
+					viewCurrentGame: false,
+					viewEndGame: true,
 				});
 				break;
 			default:

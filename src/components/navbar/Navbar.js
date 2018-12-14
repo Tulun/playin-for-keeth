@@ -37,6 +37,12 @@ class NavbarComponent extends Component {
             <NavItem>
               <p onClick={() => handleViewPage("createGame")} className="nav-link">Create Game</p>
             </NavItem>
+            <NavItem>
+              <p onClick={() => handleViewPage("viewCurrentGame")} className="nav-link">View Game</p>
+            </NavItem>
+            <NavItem>
+              <p onClick={() => handleViewPage("viewEndGame")} className="nav-link">View End Game</p>
+            </NavItem>
           </Nav>
         </Collapse>
       </Navbar>
