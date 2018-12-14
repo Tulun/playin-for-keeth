@@ -38,11 +38,7 @@ const PlayerInformation = ({ player, handleInputChange, handleViewPage, name, ad
         </ListGroupItem>
       }
       {player.name !== "" && 
-        <Button 
-          className="btn btn-primary"
-          onClick={() => handleViewPage("createGame")}>
-            Create Game
-        </Button>
+        <ListGroupItem>Name: {player.name}</ListGroupItem>
       }
       <ListGroupItem>Rank: {player.rank}</ListGroupItem>
       <ListGroupItem>Wins: {player.wins}</ListGroupItem>

@@ -46,7 +46,6 @@ class Home extends Component {
 			},
 			balance: 0,
 			betValue: "",
-			value: "",
 			chooseWinner: "",
 			copied: false,
 			creatingGame: false,
@@ -59,11 +58,13 @@ class Home extends Component {
 			closingGameError: false,
 			declaringWinnerCall: false,
 			declaringWinnerCallError: false,
-			viewHome: true,
-			viewAccount: false,
-			viewCreateGame: false,
-			viewCurrentGame: false,
-			viewEndGame: false,
+			pages: {
+				viewHome: true,
+				viewAccount: false,
+				viewCreateGame: false,
+				viewCurrentGame: false,
+				viewEndGame: false,
+			},
 			tooltipOpen: false,
 		}
 
@@ -206,7 +207,8 @@ class Home extends Component {
 
 		const txCount = await this.web3.eth.getTransactionCount(this.walletService.publicKey);
 		// construct the transaction data
-		const value = this.state.value ? this.state.value : "0";
+		const value = this.state.betValue ? this.state.betValue
+		 : "0";
 		const txData = {
 			nonce: this.web3.utils.toHex(txCount),
 			gasLimit: this.web3.utils.toHex(5000000),
@@ -370,29 +372,35 @@ class Home extends Component {
 		switch(page) {
 			case "home" :
 				this.setState({
-					viewHome: true,
-					viewAccount: false,
-					viewGame: false,
-					viewCurrentGame: false,
-					viewEndGame: false,
+					pages: {
+						viewHome: true,
+						viewAccount: false,
+						viewCreateGame: false,
+						viewCurrentGame: false,
+						viewEndGame: false,
+					}
 				});
 				break;
 			case "account": 
 				this.setState({
-					viewHome: false,
-					viewAccount: true,
-					viewGame: false,
-					viewCurrentGame: false,
-					viewEndGame: false,
+					pages: {
+						viewHome: false,
+						viewAccount: true,
+						viewCreateGame: false,
+						viewCurrentGame: false,
+						viewEndGame: false,
+					}
 				});
 				break;
 			case "createGame":
 				this.setState({
-					viewHome: false,
-					viewAccount: false,
-					viewCreateGame: true,
-					viewCurrentGame: false,
-					viewEndGame: false,
+					pages: {
+						viewHome: false,
+						viewAccount: false,
+						viewCreateGame: true,
+						viewCurrentGame: false,
+						viewEndGame: false,
+					}
 				});
 				break;
 			case "viewCurrentGame":
@@ -406,11 +414,13 @@ class Home extends Component {
 				break;
 			case "viewEndGame":
 				this.setState({
-					viewHome: false,
-					viewAccount: false,
-					viewCreateGame: false,
-					viewCurrentGame: false,
-					viewEndGame: true,
+					pages: {
+						viewHome: false,
+						viewAccount: false,
+						viewCreateGame: false,
+						viewCurrentGame: false,
+						viewEndGame: true,
+					}
 				});
 				break;
 			default:
@@ -425,23 +435,31 @@ class Home extends Component {
 			console.log('pot', this.web3.utils.fromWei(this.state.game.pot));	
 		}
 
+		console.log(this.state)
+
 		return(
 			<div className="container text-center py-5">
 				<Navbar handleViewPage={this.handleViewPage} />
 				<ToastContainer  />
 				<ProgressLight gameInProgress={ this.state.gameInProgress } />
 
-				{ this.state.viewHome && 
+				{ this.state.pages.viewHome && 
 					<div className="Home">
 						<h1>Playing for Ke[ETH]s</h1>
 						<p>A leaderboard and ETH wagering DApp</p>
-						<Button color="primary" size="lg" className="mb-5" onClick={ () => this.handleViewPage('account') }>Get Started</Button>
+						<div className="mb-5"	>
+							{ this.state.gameInProgress ?
+									<Button color="primary" size="lg" onClick={ () => this.handleViewPage('viewCurrentGame') }>View Current Game</Button>
+								:
+									<Button color="primary" size="lg" onClick={ () => this.handleViewPage('account') }>Get Started</Button>
+							}
+						</div>
 						<h3>Leaderboard</h3>
 						<Leaderboard players={ this.state.players } />
 					</div>
 				}
 
-				{ this.state.viewAccount &&
+				{ this.state.pages.viewAccount &&
 					<div className="Account">
 						<Account
 							publicKey={ this.walletService.publicKey }
@@ -460,22 +478,27 @@ class Home extends Component {
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
 						/>
-						<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
+						{ this.state.gameInProgress ?
+							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
+							:
+							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('viewCurrentGame') }>View Current Game</Button>
+						}
+						
 					</div>
 				}
 				
-				{ this.state.viewCreateGame &&
+				{ this.state.pages.viewCreateGame &&
 					<div className="CreateGame">
 						<CreateGame
 							createGame={ () => this.createGame() }
 							creatingGame={ this.state.creatingGame }
-							value={ this.state.value }
+							value={ this.state.betValue }
 							handleInputChange={ this.handleInputChange }
 						/>
 					</div>
 				}
 				
-				{ this.state.viewCurrentGame &&
+				{ this.state.pages.viewCurrentGame &&
 					<Section>
 						<CurrentGame
 							// endGame={}
@@ -486,7 +509,7 @@ class Home extends Component {
 					</Section>
 				}
 
-				{ this.state.viewEndGame &&
+				{ this.state.pages.viewEndGame &&
 					<Section sectionClass="bg-light">
 						<EndGame
 							closingGame={this.state.closingGame }
