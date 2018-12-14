@@ -244,8 +244,7 @@ class Home extends Component {
 		const addSecondPlayerHexCode = this.web3.eth.abi.encodeFunctionSignature("addSecondPlayerToGame()");
 
 		const txCount = await this.web3.eth.getTransactionCount(this.walletService.publicKey);
-		// construct the transaction data
-		const betValue = this.state.betValue ? this.state.betValue : "0";
+		// construct the transaction data 
 		const txData = {
 			nonce: this.web3.utils.toHex(txCount),
 			gasLimit: this.web3.utils.toHex(5000000),
@@ -253,7 +252,7 @@ class Home extends Component {
 			to: address,
 			from: this.walletService.publicKey,
 			data: addSecondPlayerHexCode,
-			value: this.web3.utils.toHex(this.web3.utils.toWei(betValue, "ether"))
+			value: this.web3.utils.toHex(this.state.game.bet)
 		};
 
 		const tx = await this.sendTransaction(txCount, txData);
@@ -521,7 +520,7 @@ class Home extends Component {
 							handleViewPage={this.handleViewPage}
 							player={ this.state.player }
 							handleInputChange={ this.handleInputChange }
-							value={ this.state.name }
+							name={ this.state.name }
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
 						/>
