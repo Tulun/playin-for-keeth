@@ -35,7 +35,7 @@ const Leaderboard = ({ players }) => {
             { sortedPlayers.map( (player, index) => {
               return (
                 <tr key={index}>
-                  <th scope="row">{index}</th>
+                  <th scope="row">{player.id}</th>
                   <td>{player.name}</td>
                   <td>{player.playerAddress}</td>
                   <td>{player.wins}</td>
