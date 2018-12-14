@@ -405,11 +405,13 @@ class Home extends Component {
 				break;
 			case "viewCurrentGame":
 				this.setState({
-					viewHome: false,
-					viewAccount: false,
-					viewCreateGame: false,
-					viewCurrentGame: true,
-					viewEndGame: false,
+					pages: {
+						viewHome: false,
+						viewAccount: false,
+						viewCreateGame: false,
+						viewCurrentGame: true,
+						viewEndGame: false,
+					}
 				});
 				break;
 			case "viewEndGame":
