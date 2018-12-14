@@ -293,15 +293,6 @@ class Home extends Component {
 	declareWinner = async () => {
 		this.setState({ declaringWinnerCall: true, declaringWinnerCallError: false })
 		const winnerInt = parseInt(this.state.chooseWinner);
-		console.log(winnerInt);
-		// const winnerHexcode = this.web3.eth.abi.encodeFunctionCall({
-		// 	name: "chooseWinner",
-		// 	type: "function",
-		// 	inputs: [{
-		// 		type: 'uint',
-		// 		name: '_declaredWinner'
-		// 	}]
-		// },[winnerInt]);
 
 		const winnerHexcode = leaderboard.methods.chooseWinner(winnerInt).encodeABI();
 		console.log('winnerHexcode', winnerHexcode);
