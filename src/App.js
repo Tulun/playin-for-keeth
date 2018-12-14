@@ -150,9 +150,6 @@ class Home extends Component {
         console.log('err', error)
       }
 		});
-
-		// Check for player 2 
-		this.handlePlayerTwoJoined()
 		
 	}
 
@@ -161,7 +158,14 @@ class Home extends Component {
       const game = await leaderboard.methods.game().call();
       this.setState({ game });
       console.log('game', game);
-    }
+		}
+
+		// Check for player 2 
+		if (this.state.game !== prevState.game) {
+			console.log('prev state is different from game')
+			this.handlePlayerTwoJoined()
+		}
+		
 	}
 
 	changeBlockchainUI = (type, err) => {
