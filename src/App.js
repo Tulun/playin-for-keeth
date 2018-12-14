@@ -262,6 +262,7 @@ class Home extends Component {
 			this.changeBlockchainUI("addingSecondPlayerToGame", "addingSecondPlayerToGameError");
 		} else {
 			this.changeBlockchainUI("addingSecondPlayerToGame", undefined);
+			this.handleViewPage('currentGame')
 		}
 	}
 
@@ -549,9 +550,9 @@ class Home extends Component {
 							joinGame={ () => this.handleViewPage('joinGame') }
 							endGame={ () =>this.handleViewPage('endGame') } 
 							game={this.state.game}
-							gameInProgress={this.state.gameInProgress}
-							addSecondPlayerToGame={() => this.addSecondPlayerToGame()}
-							pot={pot}
+							gameInProgress={ this.state.gameInProgress }
+							addSecondPlayerToGame={() => this.addSecondPlayerToGame() }
+							pot={ this.state.game.pot }
 						/>
 					</Section>
 				}

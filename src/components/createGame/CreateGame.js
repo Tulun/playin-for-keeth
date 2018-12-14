@@ -22,22 +22,24 @@ const CreateGame = ({ creatingGame, createGame, handleInputChange, value }) => (
 				<Col xs="12" md="1"><h5>OR</h5></Col>
 				<Col xs="12" md="5">
 					<h2>Make things interesting</h2>
-					<Form>
-						<FormGroup>
-							<Label for="betAmount">Bet amount in ETH</Label>
-							<Input
-								type="text"
-								name="betAmount"
-								id="betAmount"
-								placeholder="0.25"
-								onChange={(event, state) => handleInputChange(event, "betValue") }
-								value={ value }
-							/>
-						</FormGroup>
-					</Form>
 					{ creatingGame && <p>Transaction pending...</p>}
 					{!creatingGame && 
-						<Button onClick={ createGame }color="primary">Play with bet</Button>
+						<div>
+							<Form>
+								<FormGroup>
+									<Label for="betAmount">Bet amount in ETH</Label>
+									<Input
+										type="text"
+										name="betAmount"
+										id="betAmount"
+										placeholder="0.25"
+										onChange={(event, state) => handleInputChange(event, "betValue") }
+										value={ value }
+									/>
+								</FormGroup>
+							</Form>
+							<Button onClick={ createGame }color="primary">Play with bet</Button>
+						</div>
 					}
 				</Col>
 			</Row>
