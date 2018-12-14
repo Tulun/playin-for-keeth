@@ -29,12 +29,12 @@ const PlayerInformation = ({ player, handleInputChange, handleViewPage, name, ad
   if (players.length) {
     const sortedPlayers = players.sort( (a, b) => b.wins - a.wins || a.losses - b.losses );
 
-    rank = sortedPlayers.map( (p, index) => {
+    sortedPlayers.map( (p, index) => {
       if (p.id === player.id) {
         return rank = index + 1;
       };
       return null;
-    }).filter(x => x)[0]
+    })
   }
   return (
     <div className="PlayerInformation pt-5">
