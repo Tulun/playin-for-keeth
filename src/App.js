@@ -568,7 +568,7 @@ class Home extends Component {
 							addingSecondPlayerToGame={ this.state.addingSecondPlayerToGame }
 							addSecondPlayerToGame={ () => this.addSecondPlayerToGame() }
 							playerOne={ this.state.game.firstPlayer }
-							bet={ this.state.game.bet }
+							bet={ this.web3.utils.fromWei(this.state.game.bet) }
 						/>
 					</Section>
 				}
