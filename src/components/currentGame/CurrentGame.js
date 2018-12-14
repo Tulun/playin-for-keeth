@@ -13,7 +13,7 @@ const CurrentGame = ({ endGame, game, pot, joinGame, playerTwoJoined, player }) 
 		<h3>Player 2: {game.secondPlayer === player.playerAddress ? player.name : 'Waiting for player...'}</h3>
 		<p>playing for</p>
 		<h1 className="display-1">{ pot } <span className="h6">ETH</span></h1>
-		{!playerTwoJoined && <Button color="primary" onClick={ joinGame }>Join Game</Button> }
+		{!playerTwoJoined && (game.firstPlayer !== player.playerAddress) && <Button color="primary" onClick={ joinGame }>Join Game</Button> }
 		{ playerTwoJoined && 
 			<div>
 				<p>
