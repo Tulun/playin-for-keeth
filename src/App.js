@@ -514,6 +514,14 @@ class Home extends Component {
 							tooltipOpen={ this.state.tooltipOpen}
 							toggle={ this.toggle }
 						/>
+						{ this.state.gameInProgress ?
+							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('currentGame') }>View Current Game</Button>
+							:
+								this.state.player.name ? 
+									<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
+								:
+								<p className="mt-5">Add your name to create a game</p>
+						}
 						<PlayerInformation
 							handleViewPage={this.handleViewPage}
 							player={ this.state.player }
@@ -522,12 +530,6 @@ class Home extends Component {
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
 						/>
-						{ this.state.gameInProgress ?
-							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
-							:
-							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('currentGame') }>View Current Game</Button>
-						}
-						
 					</div>
 				}
 				
