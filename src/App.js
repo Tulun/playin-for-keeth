@@ -131,7 +131,8 @@ class Home extends Component {
 
         if (result.event === "PlayerUpdated") {
           const players = this.state.players;
-          const player = await leaderboard.methods.players(parseInt(result.returnValues[0])).call();
+					const player = await leaderboard.methods.players(parseInt(result.returnValues[0])).call();
+					console.log('player', player, 'players before adding player', players);
           players[parseInt(result.returnValues[0])] = player;
 					console.log('in result', players);
 
