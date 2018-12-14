@@ -46,7 +46,7 @@ class Home extends Component {
 			},
 			balance: 0,
 			betValue: "",
-			chooseWinner: "",
+			chooseWinner: 0,
 			copied: false,
 			creatingGame: false,
 			creatingGameError: false,
@@ -283,15 +283,19 @@ class Home extends Component {
 
 	declareWinner = async () => {
 		this.setState({ declaringWinnerCall: true, declaringWinnerCallError: false })
-		const winnerHexcode = this.web3.eth.abi.encodeFunctionCall({
-			name: "chooseWinner",
-			type: "function",
-			inputs: [{
-				type: 'uint',
-				name: '_declaredWinner'
-			}]
-		},[this.state.chooseWinner]);
+		const winnerInt = parseInt(this.state.chooseWinner);
+		console.log(winnerInt);
+		// const winnerHexcode = this.web3.eth.abi.encodeFunctionCall({
+		// 	name: "chooseWinner",
+		// 	type: "function",
+		// 	inputs: [{
+		// 		type: 'uint',
+		// 		name: '_declaredWinner'
+		// 	}]
+		// },[winnerInt]);
 
+		const winnerHexcode = leaderboard.methods.chooseWinner(winnerInt).encodeABI();
+		console.log('winnerHexcode', winnerHexcode);
 		const txCount = await this.web3.eth.getTransactionCount(this.walletService.publicKey);
 		// construct the transaction data
 		const txData = {
@@ -439,6 +443,8 @@ class Home extends Component {
 
 		console.log(this.state)
 
+		console.log(this.state.chooseWinner)
+
 		return(
 			<div className="container text-center py-5">
 				<Navbar handleViewPage={this.handleViewPage} />
@@ -506,6 +512,7 @@ class Home extends Component {
 							// endGame={}
 							game={this.state.game}
 							gameInProgress={this.state.gameInProgress}
+							addSecondPlayerToGame={() => this.addSecondPlayerToGame()}
 							pot={pot}
 						/>
 					</Section>

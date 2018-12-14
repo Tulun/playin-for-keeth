@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
 };
 
-const CurrentGame = ({ endGame, game, gameInProgress, pot }) => (
+const CurrentGame = ({ endGame, game, gameInProgress, addSecondPlayerToGame, pot }) => (
 	<div className="CurrentGame">
 		<h2>Let the Games Begin!</h2>
 		<h6>Gane ID: {game.id}</h6>
@@ -20,6 +20,7 @@ const CurrentGame = ({ endGame, game, gameInProgress, pot }) => (
 				P2 Declared Winner: {game.declaredWinnerSecondPlayer}
 			</p>
 		: null}
+		<Button onClick={ addSecondPlayerToGame }>Add Player Two</Button>
 		<Button color="primary" onClick={ endGame }>End Game</Button>
 	</div>
 );
