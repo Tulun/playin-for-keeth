@@ -63,9 +63,11 @@ class Home extends Component {
 				viewAccount: false,
 				viewCreateGame: false,
 				viewCurrentGame: false,
+				viewJoinGame: false,
 				viewEndGame: false,
 			},
 			tooltipOpen: false,
+			playerTwoJoined: false,
 		}
 
 		// wallet stuff
@@ -148,6 +150,9 @@ class Home extends Component {
         console.log('err', error)
       }
 		});
+
+		// Check for player 2 
+		this.handlePlayerTwoJoined()
 		
 	}
 
@@ -231,7 +236,7 @@ class Home extends Component {
 	}
 
 	addSecondPlayerToGame = async () => {
-		this.setState({ addingSecondPlayerToGame: true,addingSecondPlayerToGameError: false  });
+		this.setState({ addingSecondPlayerToGame: true, addingSecondPlayerToGameError: false  });
 		const addSecondPlayerHexCode = this.web3.eth.abi.encodeFunctionSignature("addSecondPlayerToGame()");
 
 		const txCount = await this.web3.eth.getTransactionCount(this.walletService.publicKey);
@@ -369,6 +374,7 @@ class Home extends Component {
 	}
 	
 	handleViewPage = (page) => {
+		console.log(page);
 		switch(page) {
 			case "home" :
 				this.setState({
@@ -377,6 +383,7 @@ class Home extends Component {
 						viewAccount: false,
 						viewCreateGame: false,
 						viewCurrentGame: false,
+						viewJoinGame: false,
 						viewEndGame: false,
 					}
 				});
@@ -388,6 +395,7 @@ class Home extends Component {
 						viewAccount: true,
 						viewCreateGame: false,
 						viewCurrentGame: false,
+						viewJoinGame: false,
 						viewEndGame: false,
 					}
 				});
@@ -399,18 +407,44 @@ class Home extends Component {
 						viewAccount: false,
 						viewCreateGame: true,
 						viewCurrentGame: false,
+						viewJoinGame: false,
 						viewEndGame: false,
 					}
 				});
 				break;
-			case "viewCurrentGame":
+			case "currentGame":
 				this.setState({
 					pages: {
 						viewHome: false,
 						viewAccount: false,
 						viewCreateGame: false,
 						viewCurrentGame: true,
+						viewJoinGame: false,
 						viewEndGame: false,
+					}
+				});
+				break;
+			case "joinGame":
+				this.setState({
+					pages: {
+						viewHome: false,
+						viewAccount: false,
+						viewCreateGame: false,
+						viewCurrentGame: false,
+						viewJoinGame: true,
+						viewEndGame: false,
+					}
+				});
+				break;
+			case "endGame":
+				this.setState({
+					pages: {
+						viewHome: false,
+						viewAccount: false,
+						viewCreateGame: false,
+						viewCurrentGame: false,
+						viewJoinGame: false,
+						viewEndGame: true,
 					}
 				});
 				break;
@@ -418,6 +452,16 @@ class Home extends Component {
 				return null;
 		}
 
+	}
+
+	handlePlayerTwoJoined() {
+		console.log('second player', typeof this.state.game.secondPlayer)
+		if (this.state.game.secondPlayer !== '0x0000000000000000000000000000000000000000') {
+			console.log('we hea now')
+			this.setState({ playerTwoJoined: true })
+		} else {
+			this.setState({ playerTwoJoined: false })
+		}
 	}
 
 	render() {		
@@ -432,7 +476,7 @@ class Home extends Component {
 			<div className="container text-center py-5">
 				<Navbar handleViewPage={this.handleViewPage} />
 				<ToastContainer  />
-				<ProgressLight gameInProgress={ this.state.gameInProgress } />
+				<ProgressLight gameInProgress={ this.state.gameInProgress } onClick={ () => this.handleViewPage('currentGame') }/>
 
 				{ this.state.pages.viewHome && 
 					<div className="Home">
@@ -440,7 +484,10 @@ class Home extends Component {
 						<p>A leaderboard and ETH wagering DApp</p>
 						<div className="mb-5"	>
 							{ this.state.gameInProgress ?
-									<Button color="primary" size="lg" onClick={ () => this.handleViewPage('viewCurrentGame') }>View Current Game</Button>
+									<div>
+										<p>Game is in progress</p>
+										<Button color="primary" size="lg" onClick={ () => this.handleViewPage('currentGame') }>View Current Game</Button>
+									</div>
 								:
 									<Button color="primary" size="lg" onClick={ () => this.handleViewPage('account') }>Get Started</Button>
 							}
@@ -453,7 +500,7 @@ class Home extends Component {
 				{ this.state.pages.viewAccount &&
 					<div className="Account">
 						<Account
-							publicKey={ this.walletService.publicKey }
+							publicKey={ this.walletService.publicKey }	
 							copied={ this.state.copied }
 							onCopy={ () => this.handlePublicKeyCopy() }
 							balance={ this.state.balance }
@@ -472,7 +519,7 @@ class Home extends Component {
 						{ this.state.gameInProgress ?
 							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
 							:
-							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('viewCurrentGame') }>View Current Game</Button>
+							<Button color="primary" size="lg" className="mt-5" onClick={ () => this.handleViewPage('currentGame') }>View Current Game</Button>
 						}
 						
 					</div>
@@ -492,10 +539,23 @@ class Home extends Component {
 				{ this.state.pages.viewCurrentGame &&
 					<Section>
 						<CurrentGame
-							// endGame={}
+							playerTwoJoined={ this.state.playerTwoJoined }
+							joinGame={ () => this.handleViewPage('joinGame') }
+							endGame={ () =>this.handleViewPage('endGame') } 
 							game={this.state.game}
 							gameInProgress={this.state.gameInProgress}
 							pot={pot}
+						/>
+					</Section>
+				}
+
+				{ this.state.pages.viewJoinGame &&
+					<Section>
+						<JoinGame
+							addingSecondPlayerToGame={ this.state.addingSecondPlayerToGame }
+							addSecondPlayerToGame={ () => this.addSecondPlayerToGame() }
+							playerOne={ this.state.game.firstPlayer }
+							bet={ this.state.game.bet }
 						/>
 					</Section>
 				}
@@ -510,12 +570,6 @@ class Home extends Component {
 							declaringWinnerCall={ this.state.declaringWinnerCall }
 							declareWinner={ () => this.declareWinner() }
 						/>
-					</Section>
-				}
-
-				{ this.state.viewJoinGame &&
-					<Section>
-						<JoinGame addSecondPlayerToGame={ () => this.addSecondPlayerToGame() } />
 					</Section>
 				}
 

@@ -6,12 +6,13 @@ const propTypes = {
 	
 };
 
-const JoinGame = ({ addSecondPlayerToGame }) => (
+const JoinGame = ({ addSecondPlayerToGame, addingSecondPlayerToGame, bet, playerOne }) => (
 	<div className="JoinGame">
 		<h2>Join the Game</h2>
-		<p>Join the current game created by [Player 1] by confirming the bet amount of [0.5eth]</p>
-		<h2 className="display-1">0.5 <span className="h6">ETH</span></h2>
-		<Button color="primary" onClick={ addSecondPlayerToGame }>Confirm and Join Game</Button>
+		<p>Join the current game created by {playerOne} by confirming the bet amount of {bet}</p>
+		<h2 className="display-1">{bet} <span className="h6">ETH</span></h2>
+		{ addingSecondPlayerToGame && <p>Transaction pending...</p>}
+		{ !addingSecondPlayerToGame && <Button color="primary" onClick={ addSecondPlayerToGame }>Confirm and Join Game</Button> }
 	</div>
 );
 
