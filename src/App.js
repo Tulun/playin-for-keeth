@@ -490,7 +490,10 @@ class Home extends Component {
 										<Button color="primary" size="lg" onClick={ () => this.handleViewPage('currentGame') }>View Current Game</Button>
 									</div>
 								:
-									<Button color="primary" size="lg" onClick={ () => this.handleViewPage('account') }>Get Started</Button>
+									(this.state.balance > 0) && (this.state.player.name !== '') ?
+										<Button color="primary" size="lg" onClick={ () => this.handleViewPage('createGame') }>Create Game</Button>
+									:
+										<Button color="primary" size="lg" onClick={ () => this.handleViewPage('account') }>Get Started</Button>
 							}
 						</div>
 						<h3>Leaderboard</h3>
