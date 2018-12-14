@@ -28,6 +28,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Contract
 import leaderboard from './leaderboard';
+import { timingSafeEqual } from 'crypto';
 
 class Home extends Component {
 	constructor(props) {
@@ -236,6 +237,7 @@ class Home extends Component {
 			this.notify("Creating Game call failed.")
 		} else {
 			this.changeBlockchainUI("creatingGame", undefined);
+			this.handleViewPage('currentGame')
 		}
 
 	}
@@ -546,13 +548,13 @@ class Home extends Component {
 				{ this.state.pages.viewCurrentGame &&
 					<Section>
 						<CurrentGame
+							player={ this.state.player }
 							playerTwoJoined={ this.state.playerTwoJoined }
 							joinGame={ () => this.handleViewPage('joinGame') }
 							endGame={ () =>this.handleViewPage('endGame') } 
 							game={this.state.game}
-							gameInProgress={ this.state.gameInProgress }
 							addSecondPlayerToGame={() => this.addSecondPlayerToGame() }
-							pot={ this.state.game.pot }
+							pot={ this.web3.utils.fromWei(this.state.game.pot) }
 						/>
 					</Section>
 				}

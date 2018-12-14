@@ -5,13 +5,12 @@ import PropTypes from 'prop-types';
 const propTypes = {
 };
 
-const CurrentGame = ({ endGame, game, gameInProgress, pot, joinGame, playerTwoJoined }) => (
+const CurrentGame = ({ endGame, game, pot, joinGame, playerTwoJoined, player }) => (
 	<div className="CurrentGame">
 		<h2>Let the Games Begin!</h2>
 		<h6>Game ID: {game.id}</h6>
-		<h3>Player 1: {game.firstPlayer}</h3>
-		<h6>vs</h6>
-		<h3>Player 2: {game.secondPlayer}</h3>
+		<h3>Player 1: {game.firstPlayer === player.playerAddress ? player.name : 'Waiting for player...'}</h3>
+		<h3>Player 2: {game.secondPlayer === player.playerAddress ? player.name : 'Waiting for player...'}</h3>
 		<p>playing for</p>
 		<h1 className="display-1">{ pot } <span className="h6">ETH</span></h1>
 		{!playerTwoJoined && <Button color="primary" onClick={ joinGame }>Join Game</Button> }
