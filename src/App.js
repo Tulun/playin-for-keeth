@@ -523,6 +523,7 @@ class Home extends Component {
 							name={ this.state.name }
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
+							players={this.state.players}
 						/>
 					</div>
 				}

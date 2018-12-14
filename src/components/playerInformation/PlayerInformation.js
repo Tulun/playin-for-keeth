@@ -24,29 +24,43 @@ const defaultProps = {
   }
 }
 
-const PlayerInformation = ({ player, handleInputChange, handleViewPage, name, addingPlayerToLeaderboard, addPlayerToLeaderboard }) => ( 
-  <div className="PlayerInformation pt-5">
-    <h3>Player Information</h3>
-    <ListGroup flush>
-      {player.name === "" &&
-        <ListGroupItem>
-          <InputPlayerName
-            handleInputChange={ handleInputChange }
-            value={ name }
-            addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
-            addPlayerToLeaderboard={ addPlayerToLeaderboard } /> 
-        </ListGroupItem>
-      }
-      {player.name !== "" && 
-        <ListGroupItem>Name: {player.name}</ListGroupItem>
-      }
-      <ListGroupItem>Rank: {player.rank}</ListGroupItem>
-      <ListGroupItem>Wins: {player.wins}</ListGroupItem>
-      <ListGroupItem>Losses: {player.losses}</ListGroupItem>
-      <ListGroupItem>Ties: {player.ties}</ListGroupItem>
-    </ListGroup>
-  </div>
-)
+const PlayerInformation = ({ player, handleInputChange, handleViewPage, name, addingPlayerToLeaderboard, addPlayerToLeaderboard, players }) => {
+  let rank = 0;
+  if (players.length) {
+    const sortedPlayers = players.sort( (a, b) => b.wins - a.wins || a.losses - b.losses );
+
+    rank = sortedPlayers.map( (p, index) => {
+      if (p.id === player.id) {
+        return rank = index + 1;
+      };
+      return null;
+    }).filter(x => x)[0]
+  }
+  return (
+    <div className="PlayerInformation pt-5">
+      <h3>Player Information</h3>
+      <ListGroup flush>
+        {player.name === "" &&
+          <ListGroupItem>
+            <InputPlayerName
+              handleInputChange={ handleInputChange }
+              value={ name }
+              addingPlayerToLeaderboard={ addingPlayerToLeaderboard }
+              addPlayerToLeaderboard={ addPlayerToLeaderboard } /> 
+          </ListGroupItem>
+        }
+        {player.name !== "" && 
+          <ListGroupItem>Name: {player.name}</ListGroupItem>
+        }
+        <ListGroupItem>Rank: {rank}</ListGroupItem>
+        <ListGroupItem>Wins: {player.wins}</ListGroupItem>
+        <ListGroupItem>Losses: {player.losses}</ListGroupItem>
+        <ListGroupItem>Ties: {player.ties}</ListGroupItem>
+      </ListGroup>
+    </div>
+  )
+
+}
 
 
 PlayerInformation.propTypes = propTypes;
