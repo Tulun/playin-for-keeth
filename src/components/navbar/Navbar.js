@@ -32,10 +32,10 @@ class NavbarComponent extends Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <p onClick={() => handleViewPage("account")} className="nav-link">Account</p>
+              <p onClick={() => handleViewPage("account")} className="nav-link">View Account</p>
             </NavItem>
             <NavItem>
-              <p onClick={() => handleViewPage("createGame")} className="nav-link">Create Game</p>
+              <p onClick={() => handleViewPage("createGame")} className="nav-link">View Create Game</p>
             </NavItem>
             <NavItem>
               <p onClick={() => handleViewPage("currentGame")} className="nav-link">View Game</p>
