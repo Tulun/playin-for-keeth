@@ -27,9 +27,7 @@ const defaultProps = {
 const PlayerInformation = ({ player, handleInputChange, handleViewPage, name, addingPlayerToLeaderboard, addPlayerToLeaderboard, players }) => {
   let rank = 0;
   if (players.length) {
-    const sortedPlayers = players.sort( (a, b) => b.wins - a.wins || a.losses - b.losses );
-
-    sortedPlayers.map( (p, index) => {
+    players.map( (p, index) => {
       if (p.id === player.id) {
         return rank = index + 1;
       };

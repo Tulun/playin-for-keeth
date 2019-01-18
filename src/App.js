@@ -36,6 +36,7 @@ class Home extends Component {
 
 		this.state = {
 			players: [],
+			sortedPlayers: [],
 			gameInProgress: false,
 			game: {},
 			player: {
@@ -167,7 +168,18 @@ class Home extends Component {
 			console.log('prev state is different from game')
 			this.handlePlayerTwoJoined()
 		}
+
+		// Sort players when they change.
+		if (this.state.players !== prevState.players) {
+			this.sortPlayers(this.state.players);
+		}
 		
+	}
+	
+	sortPlayers = (players) => {
+		const sortedPlayers = players.sort( (a, b) => b.wins - a.wins || a.losses - b.losses );
+
+		this.setState({ sortedPlayers });
 	}
 
 	changeBlockchainUI = (type, err) => {
@@ -472,6 +484,8 @@ class Home extends Component {
 			pot = this.web3.utils.fromWei(this.state.game.pot);
 		}
 
+		console.log('state', this.state.sortedPlayers, )
+
 		return (
 			<div className="container text-center py-5">
 				<Navbar handleViewPage={this.handleViewPage} />
@@ -496,7 +510,7 @@ class Home extends Component {
 							}
 						</div>
 						<h3>Leaderboard</h3>
-						<Leaderboard players={ this.state.players } />
+						<Leaderboard players={ this.state.sortedPlayers } />
 					</div>
 				}
 
@@ -526,7 +540,7 @@ class Home extends Component {
 							name={ this.state.name }
 							addingPlayerToLeaderboard={ this.state.addingPlayerToLeaderboard }
 							addPlayerToLeaderboard={ () => this.addPlayerToLeaderboard() }
-							players={this.state.players}
+							players={this.state.sortedPlayers}
 						/>
 					</div>
 				}
