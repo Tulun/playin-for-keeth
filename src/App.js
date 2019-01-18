@@ -468,7 +468,7 @@ class Home extends Component {
 
 	}
 
-	handlePlayerTwoJoined() {
+	handlePlayerTwoJoined = () => {
 		console.log('second player', typeof this.state.game.secondPlayer)
 		if (this.state.game.secondPlayer !== '0x0000000000000000000000000000000000000000') {
 			console.log('we hea now')
@@ -478,14 +478,7 @@ class Home extends Component {
 		}
 	}
 
-	render() {		
-		let pot = '';
-		if(this.state.game.pot) {
-			pot = this.web3.utils.fromWei(this.state.game.pot);
-		}
-
-		console.log('state', this.state.sortedPlayers, )
-
+	render() {	
 		return (
 			<div className="container text-center py-5">
 				<Navbar handleViewPage={this.handleViewPage} />
