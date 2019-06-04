@@ -1,6 +1,7 @@
 import Wallet from 'ethereumjs-wallet'
-import EthUtil from 'ethereumjs-util'
+import * as EthUtil from 'ethereumjs-util'
 
+console.log('eu', EthUtil);
 export default class WalletService {
 	constructor() {
 		const privateKey = localStorage.getItem('privateKey')
