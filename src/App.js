@@ -83,11 +83,13 @@ class Home extends Component {
 		const gameInProgress = await leaderboard.methods.gameInProgress().call();
 		const game = await leaderboard.methods.game().call();
 		const currentBlock = await this.web3.eth.getBlock("latest");
-		const numPlayers = await leaderboard.methods.totalNumPlayers().call();
-		
+		const numPlayersHex = await leaderboard.methods.totalNumPlayers().call();
+		const numPlayers = numPlayersHex.toNumber();
 		console.log('cb', currentBlock);
-		console.log(numPlayers);
-		
+		console.log('numPlayers', numPlayers);
+		console.log('gameInProgress', gameInProgress)
+		console.log("balance", balance);
+		console.log('game', game);
 		const initialPlayers = [];
 		if (numPlayers > 0) {
 			for (let i=0; i < numPlayers; i++) {
